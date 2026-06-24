@@ -13,6 +13,10 @@ echo "Task ID: $TASK_ID"
 
 # ── Ensure log dirs exist ─────────────────────────────────────────────────────
 mkdir -p /var/log/nginx /app/log
+touch /var/log/nginx/access.log \
+      /var/log/nginx/error.log \
+      /app/log/production.log \
+      /app/log/puma.error.log
 
 # ── Patch CW agent config with Task ID ───────────────────────────────────────
 sed -i "s/{instance_id}/$TASK_ID/g" \

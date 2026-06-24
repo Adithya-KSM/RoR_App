@@ -37,3 +37,6 @@ plugin :tmp_restart
 plugin :solid_queue if ENV["SOLID_QUEUE_IN_PUMA"]
 
 pidfile ENV["PIDFILE"] if ENV["PIDFILE"]
+
+stdout_redirect "#{Dir.pwd}/log/production.log", "#{Dir.pwd}/log/puma.error.log", true
+# true = append mode
