@@ -19,8 +19,16 @@ sed -i "s/{instance_id}/$TASK_ID/g" \
   /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
 
 # ── Start CloudWatch Agent (direct binary, no systemctl) ──────────────────────
+# Step 1: Translate JSON config to TOML (agent only accepts TOML)
+/opt/aws/amazon-cloudwatch-agent/bin/config-translator \
+  --input /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json \
+  --output /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.toml \
+  --mode ec2 \
+  --os linux
+
+# Step 2: Start agent with translated TOML config
 /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent \
-  -config /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json \
+  -config /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.toml \
   -pidfile /var/run/amazon-cloudwatch-agent.pid \
   &
 
