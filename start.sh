@@ -18,18 +18,17 @@ mkdir -p /var/log/nginx /app/log
 sed -i "s/{instance_id}/$TASK_ID/g" \
   /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
 
-# ── Start CloudWatch Agent ────────────────────────────────────────────────────
-/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
-  -a fetch-config \
-  -m ec2 \
-  -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json \
-  -s
+# ── Start CloudWatch Agent (direct binary, no systemctl) ──────────────────────
+/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent \
+  -config /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json \
+  -pidfile /var/run/amazon-cloudwatch-agent.pid \
+  &
 
-echo "CloudWatch agent started."
+echo "CloudWatch agent started (PID $!)"
 
 # ── Start nginx ───────────────────────────────────────────────────────────────
 service nginx start
 echo "nginx started."
 
-# ── Start Puma (foreground, keeps container alive) ────────────────────────────
+# ── Start Puma (foreground, PID 1) ───────────────────────────────────────────
 exec bundle exec puma -C config/puma.rb
