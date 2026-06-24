@@ -20,7 +20,13 @@
             "log_group_name": "/ecs/adithya-manual-ror-task-definition",
             "log_stream_name": "ecs/rails-app/{instance_id}",
             "timezone": "UTC"
-          }
+          },
+          {
+            "file_path": "/app/log/puma.error.log",
+            "log_group_name": "/ecs/adithya-manual-ror-task-definition",
+            "log_stream_name": "ecs/puma-error/{instance_id}",
+            "timezone": "UTC"
+            }
         ]
       }
     },
